@@ -1,0 +1,27 @@
+from pygame.math import Vector2
+
+
+class RemoteEntity:
+    
+    def __init__(self, game, position=(0, 0), velocity=(0, 0)):
+        self.position = Vector2(position)
+        self.velocity = Vector2(velocity)
+        
+        self.image = None
+        
+        self.game = game
+    
+    def sync(self, position=(0, 0), velocity=(0, 0)):
+        self.position = Vector2(position)
+        self.velocity = Vector2(velocity)
+    
+    def update(self, dtime):
+        self.position += self.velocity * dtime
+    
+    def draw(self):
+        self.game.graphics.draw(self.image, self.position)
+    
+    def set_image(self, name):
+        self.image = name
+        
+        self.game.graphics.load_image(name)

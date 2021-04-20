@@ -20,7 +20,7 @@ class Graphics:
         except Exception as e:
             print("Error while loading texture:", str(e))
     
-    def update(self):
+    def update_camera(self):
         if self.track_object is not None:
             self.camera = self.track_object.position - self.draw_offset
     

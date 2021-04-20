@@ -25,6 +25,8 @@ class Game:
         
         self.graphics = Graphics(self.screen)
         
+        self.graphics.draw_offset = pygame.math.Vector2(self.SIZE) / 2
+        
         self.caption = "AsyncioNetgame"
         
         pygame.display.set_caption(self.caption)
@@ -99,6 +101,8 @@ class Game:
                     return
                 
             self.local_player.update_presses(**presses)
+            
+            self.graphics.update_camera()
             
             self.screen.blit(self.bg, (0, 0))
             

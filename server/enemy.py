@@ -5,18 +5,20 @@ import random
 from .entity import Entity
 
 
-def randvector():
-    return Vector2(random.randint(-2, 2), random.randint(-2, 2))
+def randvector(speed):
+    return Vector2(random.randint(-2, 2), random.randint(-2, 2)) * speed
 
 
 class Enemy(Entity):
+    """Randomly moving entity. Created for testing"""
+    SPEED = 30
     definition = {
         "id": "custom:enemy",
         "image": "resources/enemy.png",
     }
     
     def __init__(self, position=(0, 0)):
-        super().__init__(position, randvector())
+        super().__init__(position, randvector(self.SPEED))
         
         self.change_velocity_time = random.randint(1, 4)
         self.timer = 0
@@ -29,4 +31,4 @@ class Enemy(Entity):
             self.timer = 0
             self.change_velocity_time = random.randint(1, 4)
             
-            self.velocity = randvector()
+            self.velocity = randvector(self.SPEED)

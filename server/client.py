@@ -66,8 +66,8 @@ class Client:
         while self.connected and self.game.running:
             data = await self.read()
             
-            if data["type"] == "client.disconnnect":
-                await self.disconnect("Disconnect asked")
+            if data["type"] == "client.disconnect":
+                await self.disconnect(data["reason"])
             elif data["type"] == "player.sync":
                 self.entity.set_position(data["position"])
                 self.entity.set_velocity(data["velocity"])

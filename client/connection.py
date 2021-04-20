@@ -42,6 +42,8 @@ class Connection:
                 continue  # Skip ourself
             self.game.entity_manager.add_entity(**entity)
         
+        self.game.entity_manager.init_queue()
+        
         asyncio.create_task(self.loop_send())
         asyncio.create_task(self.loop_read())
     

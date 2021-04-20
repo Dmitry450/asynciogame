@@ -11,7 +11,7 @@ class EntityManager:
     def __init__(self, game):
         self.entities = {}
         self.game = game
-        self.entity_updates = asyncio.Queue()
+        self.entity_updates = None
         self.player = None
     
     def add_entity(self, typeid, entityid, position, velocity):
@@ -19,6 +19,9 @@ class EntityManager:
         entity.set_image(self.registered[typeid]["image"])
         
         self.entities[entityid] = entity
+    
+    def init_queue(self):
+        self.entity_updates = asyncio.Queue()
     
     def del_entity(self, key):
         if self.entities.get(key) is None:
@@ -46,10 +49,6 @@ class EntityManager:
     
     async def run_entities_sync(self):
         while self.game.running:
-            try:
-                update = await self.entity_updates.get()
-            except RuntimeError:
-                continue  # I dont know why it gets 'Future from different loop'
-                          # when i'm creating only one
+            update = await self.entity_updates.get()
             
             self.entities[update["entityid"]].sync(update["position"], update["velocity"])

@@ -55,7 +55,7 @@ class Connection:
         while not self.disconnected.is_set() and self.game.running:
             data = await self.read()
             
-            if data["type"] == "client.disconnnect":
+            if data["type"] == "client.disconnect":
                 await self.disconnect(data["reason"])
 
             elif data["type"] == "entity.sync":

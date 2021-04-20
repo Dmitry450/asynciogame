@@ -89,6 +89,11 @@ class Game:
                     
                     self.running = False
                     
+                    await self.connection.send({
+                        "type": "client.disconnect",
+                        "reason": "client asked disconnect",
+                    })
+                    
                     self.connection.disconnected.set()
                     
                     return

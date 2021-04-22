@@ -3,6 +3,7 @@ import asyncio
 
 
 class AsyncClock:
+    """Asynchronous pygame.Clock implementation"""
     
     def __init__(self):
         self.last_call_time = time.time()
@@ -16,11 +17,13 @@ class AsyncClock:
         return f'<AsyncClock fps={self.get_fps():.1}>'
 
     def get_fps(self):
+        """Returns average fps using count of all tick() calls and total time since start"""
         if self.time_passed != 0:
             return self.frames/self.time_passed
         return 0
 
     async def tick(self, framerate=60):
+        """Update the clock"""
         dtime = time.time() - self.last_call_time
         
         time_to_sleep = 1/framerate - dtime

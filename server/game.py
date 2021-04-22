@@ -7,6 +7,7 @@ from .entity_manager import EntityManager
 
 
 class Game:
+    """Main game object"""
     config = {
         "entity.updtime": 1/20,
         "entity.synctime": 0.05,
@@ -23,10 +24,12 @@ class Game:
         self.running = True
 
     def on_client_connected(self, reader, writer):
+        """Callback for asyncio.start_server"""
         client = Client(self, reader, writer)
         asyncio.create_task(client.init())
 
     def add_player(self, name):
+        """Create new player entity"""
         player = Player(name)
         
         self.entity_manager.add_entity(player, name)
@@ -34,19 +37,23 @@ class Game:
         return player
 
     def has_player(self, name):
+        """Check is there already player on server with given name"""
         return self.entity_manager.entities.get(name) is not None
     
     def push_event(self, event):
+        """Send event to all clients"""
         for client in self.clients.values():
             client.event_queue.put_nowait(event)
     
     def disconnect_player(self, name):
+        """Remove player entity"""
         self.entity_manager.del_entity(name)
         
         if name in self.clients.keys():
             del self.clients[name]
         
     async def main(self):
+        """Run all asyncio tasks and serve forever"""
         asyncio.create_task(self.entity_manager.run_entities_update())
         asyncio.create_task(self.entity_manager.run_entities_sync())
         

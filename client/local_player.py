@@ -4,7 +4,8 @@ from pygame.math import Vector2
 
 
 class LocalPlayer:
-    SPEED = 80
+    """A local player to control"""
+    SPEED = 80  # FIXME - Easy to cheat!!!
     
     def __init__(self, game, position=(0, 0), velocity=(0, 0)):
         self.position = Vector2(position)
@@ -17,17 +18,21 @@ class LocalPlayer:
         self.image = None
     
     def update(self, dtime):
+        """Update player position"""
         self.position += self.velocity * dtime
     
     def draw(self):
+        """Draw player"""
         self.game.graphics.draw(self.image, self.position)
     
     def set_image(self, name):
+        """Set image and load if neccasuary"""
         self.image = name
         
         self.game.graphics.load_image(name)
 
     def update_presses(self, **presses):
+        """Update velocity based on pressed keys"""
         if presses['up']:
             self.velocity.y = -self.SPEED
         elif presses['down']:
@@ -43,8 +48,10 @@ class LocalPlayer:
             self.velocity.x = 0
 
     async def sync_player(self):
+        """Sync player velocity and position with server"""
         while self.game.running:
             await asyncio.sleep(self.game.config['player.synctime'])
+            # FIXME - easy to DOS-attack with synctime <= 0
             
             await self.game.connection.send({
                 "type": "player.sync",

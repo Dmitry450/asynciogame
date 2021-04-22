@@ -2,6 +2,7 @@ from .entity import Entity
 
 
 class Player(Entity):
+    """A player entity"""
     definition = {
         "id": "builtin:player",
         "image": "resources/player.png",

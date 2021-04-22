@@ -6,6 +6,7 @@ from .entity import RemoteEntity
 
 
 class EntityManager:
+    """Manager for remote entities"""
     registered = {}
     
     def __init__(self, game):
@@ -15,25 +16,30 @@ class EntityManager:
         self.player = None
     
     def add_entity(self, typeid, entityid, position, velocity):
+        """Create new remote entity object"""
         entity = RemoteEntity(self.game, position, velocity)
         entity.set_image(self.registered[typeid]["image"])
         
         self.entities[entityid] = entity
     
     def init_queue(self):
+        """Initialize queue for entity updates"""
         self.entity_updates = asyncio.Queue()
     
     def del_entity(self, key):
+        """Remove entity"""
         if self.entities.get(key) is None:
             return
         
         del self.entities[key]
     
     def draw(self):
+        """Draw all entities"""
         for entity in self.entities.values():
             entity.draw()
         
     def update(self, dtime):
+        """Update all entities"""
         if self.player is not None:
             self.player.update(dtime)
         
@@ -42,6 +48,7 @@ class EntityManager:
             
     
     async def run_entities_sync(self):
+        """Synchronize entities with server"""
         while self.game.running:
             update = await self.entity_updates.get()
             

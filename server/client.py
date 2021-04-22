@@ -5,6 +5,7 @@ from .entity_manager import EntityManager
 
 
 class Client:
+    """Interface to server-client connection"""
     
     def __init__(self, game, reader, writer):
         self.game = game
@@ -20,6 +21,7 @@ class Client:
         self.event_queue = asyncio.Queue()
 
     async def init(self):
+        """Do initial stuff when client connected"""
         request = await self.read()
         
         if self.game.has_player(request['name']):
@@ -59,10 +61,12 @@ class Client:
         asyncio.create_task(self.loop_read())
     
     async def loop_send(self):
+        """Send all server events while connected"""
         while self.connected and self.game.running:
             await self.send(await self.event_queue.get())
 
     async def loop_read(self):
+        """Read and process all client events while connected"""
         while self.connected and self.game.running:
             data = await self.read()
             
@@ -78,6 +82,7 @@ class Client:
                 await self.disconnect(f"Unknown message type: {data['type']}")
 
     async def send(self, data):
+        """Send json data to client"""
         if not self.connected:
             return
 
@@ -91,6 +96,7 @@ class Client:
             await self.disconnect(str(e))
         
     async def disconnect(self, reason=""):
+        """Drop connection"""
         print(f"{self.name} disconnected, reason: {reason}")
         
         self.writer.close()
@@ -106,6 +112,7 @@ class Client:
             self.game.disconnect_player(self.entity.name)
 
     async def read(self):
+        """Read json data from client"""
         try:
             data = await self.reader.readline()
             

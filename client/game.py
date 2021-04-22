@@ -11,6 +11,7 @@ from .async_clock import AsyncClock
 
 
 class Game:
+    """Main game object"""
     SIZE = (800, 640)
     
     config = {
@@ -43,6 +44,7 @@ class Game:
         self.running = True
     
     async def connect(self, addr):
+        """Try to connect to server"""
         self.connection = Connection(self, *await asyncio.open_connection(*addr))
         
         await self.connection.init()
@@ -52,8 +54,9 @@ class Game:
             await self.main()
     
     async def game_loop(self):
+        """Main game loop that interacts with user"""
         presses = {'up': False, 'down': False, 'left': False, 'right': False}
-        timer = AsyncClock()
+        timer = AsyncClock()  # Not using pygame.time.Clock because it blocks the whole thread
         last_upd_time = time.time()
         
         while self.running:
@@ -123,6 +126,7 @@ class Game:
 
 
     async def main(self):
+        """Create all asyncio tasks and wait for disconnect"""
         asyncio.create_task(self.entity_manager.run_entities_sync())
         asyncio.create_task(self.game_loop())
         asyncio.create_task(self.local_player.sync_player())

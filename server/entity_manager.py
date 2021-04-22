@@ -5,6 +5,7 @@ import time
 
 
 class EntityManager:
+    """Manager for server-side entities"""
     registered = {}
     
     def __init__(self, game):
@@ -12,6 +13,7 @@ class EntityManager:
         self.game = game
     
     def add_entity(self, entity, key=None):
+        """Add entity. If key is None, generate random uuid"""
         if key is None:
             key = str(uuid.uuid1())
         
@@ -26,6 +28,7 @@ class EntityManager:
         })
     
     def get_entities(self):
+        """Get json entities to send them to client"""
         entities = []
         
         for key in self.entities.keys():
@@ -39,6 +42,7 @@ class EntityManager:
         return entities
     
     def del_entity(self, key):
+        """Remove entity"""
         if self.entities.get(key) is None:
             return
         
@@ -50,6 +54,7 @@ class EntityManager:
         })
 
     async def run_entities_update(self):
+        """Update entities"""
         last_upd_time = time.time()
 
         while self.game.running:
@@ -62,6 +67,7 @@ class EntityManager:
                 entity.update(dtime)
     
     async def run_entities_sync(self):
+        """Synchronize entities with clients"""
         while self.game.running:
             await asyncio.sleep(self.game.config['entity.synctime'])
             

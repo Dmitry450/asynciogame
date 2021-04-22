@@ -6,6 +6,7 @@ from .local_player import LocalPlayer
 
 
 class Connection:
+    """Interface for client-server connection"""
     
     def __init__(self, game, reader, writer):
         self.game = game
@@ -17,6 +18,7 @@ class Connection:
         self.event_queue = asyncio.Queue()
     
     async def init(self):
+        """Do initial stuff when connected to server"""
         await self.send({
             "type": "client.auth",
             "name": self.game.playername,
@@ -42,16 +44,19 @@ class Connection:
                 continue  # Skip ourself
             self.game.entity_manager.add_entity(**entity)
         
+        # Need to do it here so EntityManager's queue was associated with our event loop
         self.game.entity_manager.init_queue()
         
         asyncio.create_task(self.loop_send())
         asyncio.create_task(self.loop_read())
     
     async def loop_send(self):
+        """Send all client events while connected"""
         while not self.disconnected.is_set() and self.game.running:
             await self.send(await self.event_queue.get())
 
     async def loop_read(self):
+        """Read and process all server events while connected"""
         while not self.disconnected.is_set() and self.game.running:
             data = await self.read()
             
@@ -82,6 +87,7 @@ class Connection:
                 await self.disconnect(f"Unknown message type: {data['type']}")
     
     async def send(self, data):
+        """Send json data to server"""
         try:
             self.writer.write(json.dumps(data).encode())
             
@@ -92,6 +98,7 @@ class Connection:
             await self.disconnect(str(e))
         
     async def disconnect(self, reason=""):
+        """Drop connection"""
         print(f"Disconnected from server, reason: {reason}")
         
         self.writer.close()
@@ -100,6 +107,7 @@ class Connection:
         self.disconnected.set()
     
     async def read(self):
+        """Read json data from server"""
         try:
             return json.loads(await self.reader.readline())
         except json.JSONDecodeError:

@@ -2,6 +2,7 @@ from pygame.math import Vector2
 
 
 class RemoteEntity:
+    """A remote entity used for client-side prediction"""
     
     def __init__(self, game, position=(0, 0), velocity=(0, 0)):
         self.position = Vector2(position)
@@ -12,16 +13,20 @@ class RemoteEntity:
         self.game = game
     
     def sync(self, position=(0, 0), velocity=(0, 0)):
+        """Reset entity attributes"""
         self.position = Vector2(position)
         self.velocity = Vector2(velocity)
     
     def update(self, dtime):
+        """Predict next position based on velocity"""
         self.position += self.velocity * dtime
     
     def draw(self):
+        """Draw entity"""
         self.game.graphics.draw(self.image, self.position)
     
     def set_image(self, name):
+        """Set entity image and load it if neccasuary"""
         self.image = name
         
         self.game.graphics.load_image(name)

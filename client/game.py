@@ -1,4 +1,5 @@
 import asyncio
+import time
 
 import pygame
 
@@ -53,6 +54,7 @@ class Game:
     async def game_loop(self):
         presses = {'up': False, 'down': False, 'left': False, 'right': False}
         timer = AsyncClock()
+        last_upd_time = time.time()
         
         while self.running:
             await timer.tick(60)
@@ -104,6 +106,10 @@ class Game:
             
             self.graphics.update_camera()
             
+            dtime = time.time() - last_upd_time
+            last_upd_time += dtime
+            self.entity_manager.update(dtime)
+            
             self.screen.blit(self.bg, (0, 0))
             
             self.local_player.draw()
@@ -118,7 +124,6 @@ class Game:
 
     async def main(self):
         asyncio.create_task(self.entity_manager.run_entities_sync())
-        asyncio.create_task(self.entity_manager.run_entities_update())
         asyncio.create_task(self.game_loop())
         asyncio.create_task(self.local_player.sync_player())
         

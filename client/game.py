@@ -39,7 +39,7 @@ class Game:
         
         self.playername = name
         
-        self.local_player = self.entity_manager.player = LocalPlayer(self)
+        self.local_player = None
         
         self.running = True
     
@@ -121,7 +121,7 @@ class Game:
             
             pygame.display.flip()
             
-            #pygame.display.set_caption(self.caption + f' {timer.get_fps()}')
+            pygame.display.set_caption(self.caption)
             # Shows wrong count. TODO - fix that
 
 

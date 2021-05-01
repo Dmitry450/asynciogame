@@ -12,9 +12,10 @@ def randvector(speed):
 class Enemy(Entity):
     """Randomly moving entity. Created for testing"""
     SPEED = 30
+    
     definition = {
         "id": "custom:enemy",
-        "image": "resources/enemy.png",
+        "images": {"default": "resources/enemy.png"},
     }
     
     def __init__(self, position=(0, 0)):
@@ -22,6 +23,7 @@ class Enemy(Entity):
         
         self.change_velocity_time = random.randint(1, 4)
         self.timer = 0
+        self.image = "default"
     
     def update(self, dtime):
         super().update(dtime)

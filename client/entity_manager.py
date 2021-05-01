@@ -15,10 +15,10 @@ class EntityManager:
         self.entity_updates = None
         self.player = None
     
-    def add_entity(self, typeid, entityid, position, velocity):
+    def add_entity(self, typeid, entityid, position, velocity, image):
         """Create new remote entity object"""
-        entity = RemoteEntity(self.game, position, velocity)
-        entity.set_image(self.registered[typeid]["image"])
+        entity = RemoteEntity(self.game, self.registered[typeid], position, velocity)
+        entity.set_image(image)
         
         self.entities[entityid] = entity
     
@@ -52,4 +52,4 @@ class EntityManager:
         while self.game.running:
             update = await self.entity_updates.get()
             
-            self.entities[update["entityid"]].sync(update["position"], update["velocity"])
+            self.entities[update["entityid"]].sync(update["position"], update["velocity"], update["image"])

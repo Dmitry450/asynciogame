@@ -36,11 +36,12 @@ class Connection:
         entity_definitions = await self.read()
         
         EntityManager.registered = {entry["id"]: entry for entry in entity_definitions["entries"]}
-
-        self.game.local_player.set_image(EntityManager.registered["builtin:player"]["image"])
         
         for entity in (await self.read())["entries"]:
             if entity["entityid"] == self.game.playername:
+                self.game.local_player = self.game.entity_manager.player = LocalPlayer(self.game, EntityManager.registered["builtin:player"])
+                
+                self.game.local_player.set_image(entity["image"])
                 continue  # Skip ourself
             self.game.entity_manager.add_entity(**entity)
         
@@ -65,6 +66,7 @@ class Connection:
 
             elif data["type"] == "entity.sync":
                 if data["entityid"] == self.game.playername:
+                    self.game.local_player.set_image(data["image"])
                     continue  # Skip ourself
                 self.game.entity_manager.entity_updates.put_nowait(data)
             

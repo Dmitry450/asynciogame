@@ -20,7 +20,7 @@ class Graphics:
         try:
             self.images[name] = pygame.image.load(name).convert_alpha()
         except Exception as e:
-            print("Error while loading texture:", str(e))
+            print(f"Error while loading texture {name}: {str(e)}")
     
     def update_camera(self):
         """Update camera position with tracked object"""

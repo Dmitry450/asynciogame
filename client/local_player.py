@@ -2,35 +2,18 @@ import asyncio
 
 from pygame.math import Vector2
 
+from .entity import RemoteEntity
 
-class LocalPlayer:
+
+class LocalPlayer(RemoteEntity):
     """A local player to control"""
     SPEED = 80  # FIXME - Easy to cheat!!!
     
-    def __init__(self, game, position=(0, 0), velocity=(0, 0)):
-        self.position = Vector2(position)
-        self.velocity = Vector2(velocity)
+    def __init__(self, game, definition, position=(0, 0), velocity=(0, 0)):
+        super().__init__(game, definition, position, velocity)
         
-        self.game = game
-        
-        self.game.graphics.track_object = self
-        
-        self.image = None
+        game.graphics.track_object = self
     
-    def update(self, dtime):
-        """Update player position"""
-        self.position += self.velocity * dtime
-    
-    def draw(self):
-        """Draw player"""
-        self.game.graphics.draw(self.image, self.position)
-    
-    def set_image(self, name):
-        """Set image and load if neccasuary"""
-        self.image = name
-        
-        self.game.graphics.load_image(name)
-
     def update_presses(self, **presses):
         """Update velocity based on pressed keys"""
         if presses['up']:

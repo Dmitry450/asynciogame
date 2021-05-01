@@ -23,8 +23,9 @@ class EntityManager:
             "type": "entity.add",
             "entityid": key,
             "typeid": entity.definition["id"],
-            "position": tuple(entity.get_position()),
-            "velocity": tuple(entity.get_velocity()),
+            "position": entity.get_position(),
+            "velocity": entity.get_velocity(),
+            "image": entity.image,
         })
     
     def get_entities(self):
@@ -35,8 +36,9 @@ class EntityManager:
             entities.append({
                 "entityid": key,
                 "typeid": self.entities[key].definition["id"],
-                "position": tuple(self.entities[key].get_position()),
-                "velocity": tuple(self.entities[key].get_velocity()),
+                "position": self.entities[key].get_position(),
+                "velocity": self.entities[key].get_velocity(),
+                "image": self.entities[key].image,
             })
         
         return entities
@@ -75,6 +77,7 @@ class EntityManager:
                 self.game.push_event({
                     "type": "entity.sync",
                     "entityid": key,
-                    "position": tuple(self.entities[key].get_position()),
-                    "velocity": tuple(self.entities[key].get_velocity()),
+                    "position": self.entities[key].get_position(),
+                    "velocity": self.entities[key].get_velocity(),
+                    "image": self.entities[key].image,
                 })

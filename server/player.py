@@ -5,7 +5,7 @@ class Player(Entity):
     """A player entity"""
     definition = {
         "id": "builtin:player",
-        "image": "resources/player.png",
+        "images": {"default": "resources/player.png"},
     }
     
     def __init__(self, name,
@@ -14,3 +14,5 @@ class Player(Entity):
         super().__init__(position, velocity)
         
         self.name = name
+        
+        self.image = "default"

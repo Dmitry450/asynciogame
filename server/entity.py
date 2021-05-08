@@ -17,6 +17,12 @@ class Entity:
         self.rect = Rect(*position, *self.SIZE)
         self.velocity = Vector2(velocity)
         self.image = None
+        self.manager = None
+        self.tags = set()
+    
+    def on_added(self, manager):
+        """Called when entity added to EntityManager"""
+        self.manager = manager
     
     def update(self, dtime):
         """Update entity"""
@@ -37,6 +43,24 @@ class Entity:
     def get_velocity(self):
         """Get entity velocity"""
         return tuple(self.velocity)
+    
+    def add_tag(self, tag):
+        """Add tag to entity"""
+        if self.manager is not None:
+            self.tags.add(tag)
+            self.manager.tag_entity(self, tag)
+    
+    def remove_tag(self, tag):
+        """Remove tag from entity"""
+        if self.manager is not None and tag in self.tags:
+            self.tags.remove(tag)
+            self.manager.untag_entity(self, tag)
+    
+    def clear_tags(self):
+        """Remove all tags from entity"""
+        if self.manager is not None:
+            for tag in self.tags:
+                self.manager.untag_entity(self, tag)
     
     @classmethod
     def register(cls):

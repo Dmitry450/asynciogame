@@ -75,7 +75,8 @@ class Connection:
                     typeid=data["typeid"],
                     entityid=data["entityid"],
                     position=data["position"],
-                    velocity=data["velocity"])
+                    velocity=data["velocity"],
+                    image=data["image"])
             
             elif data["type"] == "entity.delete":
                 self.game.entity_manager.del_entity(data["entityid"])

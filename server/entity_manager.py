@@ -10,12 +10,15 @@ class EntityManager:
     
     def __init__(self, game):
         self.entities = {}
+        self.tags = {}
         self.game = game
     
     def add_entity(self, entity, key=None):
         """Add entity. If key is None, generate random uuid"""
         if key is None:
             key = str(uuid.uuid1())
+        
+        entity.on_added(self)
         
         self.entities[key] = entity
         
@@ -48,12 +51,30 @@ class EntityManager:
         if self.entities.get(key) is None:
             return
         
+        self.entities[key].clear_tags()
+        
         del self.entities[key]
         
         self.game.push_event({
             "type": "entity.delete",
             "entityid": key,
         })
+    
+    def tag_entity(self, entity, tag):
+        """Add entity to set with name 'tag'"""
+        self.tags[tag] = self.tags.get(tag, set())
+        self.tags[tag].add(entity)
+    
+    def untag_entity(self, entity, tag):
+        """Remove entity from set with name 'tag'"""
+        if self.tags.get(tag) is None:
+            return
+        
+        self.tags[tag].remove(entity)
+    
+    def get_tagged(self, tag):
+        """Get set with name 'tag'"""
+        return self.tags.get(tag, set())
 
     async def run_entities_update(self):
         """Update entities"""

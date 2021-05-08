@@ -12,6 +12,7 @@ def randvector(speed):
 class Enemy(Entity):
     """Randomly moving entity. Created for testing"""
     SPEED = 30
+    SIZE = (32, 32)
     
     definition = {
         "id": "custom:enemy",
@@ -24,6 +25,11 @@ class Enemy(Entity):
         self.change_velocity_time = random.randint(1, 4)
         self.timer = 0
         self.image = "default"
+    
+    def on_added(self, manager, id):
+        super().on_added(manager, id)
+        
+        self.add_tag('hittable')
     
     def update(self, dtime):
         super().update(dtime)

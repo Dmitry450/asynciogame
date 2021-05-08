@@ -56,7 +56,16 @@ class Game:
     
     async def game_loop(self):
         """Main game loop that interacts with user"""
-        presses = {'up': False, 'down': False, 'left': False, 'right': False}
+        presses = {
+            'up': False,
+            'down': False,
+            'left': False,
+            'right': False,
+            'mouse': {
+                "pressed": False,
+                "position": None,
+            }
+        }
         timer = AsyncClock()  # Not using pygame.time.Clock because it blocks the whole thread
         last_upd_time = time.time()
         
@@ -89,6 +98,12 @@ class Game:
                     
                     elif event.key == pygame.K_d:
                         presses['right'] = False
+                
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    presses['mouse']['pressed'] = True
+                
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    presses['mouse']['pressed'] = False
 
                 elif event.type == pygame.QUIT:
                     print('Quit event received')
@@ -105,6 +120,9 @@ class Game:
                     self.connection.disconnected.set()
                     
                     return
+            
+            if presses['mouse']['pressed']:
+                presses['mouse']['position'] = tuple(self.graphics.camera + pygame.mouse.get_pos())
                 
             self.local_player.update_presses(**presses)
             

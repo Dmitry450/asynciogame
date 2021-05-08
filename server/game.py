@@ -2,6 +2,7 @@ import asyncio
 
 from .player import Player
 from .enemy import Enemy
+from .bullet import Bullet
 from .client import Client
 from .entity_manager import EntityManager
 
@@ -18,6 +19,7 @@ class Game:
         
         Player.register()
         Enemy.register()
+        Bullet.register()
         
         self.entity_manager = EntityManager(self)
         self.entity_manager.add_entity(Enemy())
@@ -30,7 +32,7 @@ class Game:
 
     def add_player(self, name):
         """Create new player entity"""
-        player = Player(name)
+        player = Player()
         
         self.entity_manager.add_entity(player, name)
         

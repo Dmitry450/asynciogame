@@ -18,7 +18,7 @@ class EntityManager:
         if key is None:
             key = str(uuid.uuid1())
         
-        entity.on_added(self)
+        entity.on_added(self, key)
         
         self.entities[key] = entity
         
@@ -86,7 +86,7 @@ class EntityManager:
             
             await asyncio.sleep(self.game.config['entity.updtime'])
             
-            for entity in self.entities.values():
+            for entity in list(self.entities.values()):
                 entity.update(dtime)
     
     async def run_entities_sync(self):

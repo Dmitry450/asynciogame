@@ -19,18 +19,20 @@ class Entity:
         self.image = None
         self.manager = None
         self.tags = set()
+        self.id = None
     
-    def on_added(self, manager):
+    def on_added(self, manager, id):
         """Called when entity added to EntityManager"""
         self.manager = manager
+        self.id = id
     
     def update(self, dtime):
         """Update entity"""
-        self.rect.center += self.velocity * dtime
+        self.rect.topleft += self.velocity * dtime
     
     def set_position(self, position=(0, 0)):
         """Set entity position"""
-        self.rect.center = position
+        self.rect.topleft = position
     
     def set_velocity(self, velocity=(0, 0)):
         """Set entity velocity"""
@@ -38,7 +40,7 @@ class Entity:
 
     def get_position(self):
         """Get entity position"""
-        return self.rect.center
+        return self.rect.topleft
     
     def get_velocity(self):
         """Get entity velocity"""

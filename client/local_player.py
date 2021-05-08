@@ -13,6 +13,11 @@ class LocalPlayer(RemoteEntity):
         super().__init__(game, definition, position, velocity)
         
         game.graphics.track_object = self
+        
+        self.mouse = {
+            "pressed": False,
+            "position": None,
+        }
     
     def update_presses(self, **presses):
         """Update velocity based on pressed keys"""
@@ -29,6 +34,8 @@ class LocalPlayer(RemoteEntity):
             self.velocity.x = self.SPEED
         else:
             self.velocity.x = 0
+        
+        self.mouse = presses['mouse']
 
     async def sync_player(self):
         """Sync player velocity and position with server"""
@@ -38,6 +45,9 @@ class LocalPlayer(RemoteEntity):
             
             await self.game.connection.send({
                 "type": "player.sync",
+                
                 "position": tuple(self.position),
                 "velocity": tuple(self.velocity),
+                
+                "mouse": self.mouse,
             })

@@ -75,6 +75,7 @@ class Client:
             elif data["type"] == "player.sync":
                 self.entity.set_position(data["position"])
                 self.entity.set_velocity(data["velocity"])
+                self.entity.set_mouse(data["mouse"])
             elif data["type"] == "error":
                 await self.disconnect(data['text'])
             else:
@@ -109,7 +110,7 @@ class Client:
         self.connected = False
         
         if self.entity is not None:
-            self.game.disconnect_player(self.entity.name)
+            self.game.disconnect_player(self.name)
 
     async def read(self):
         """Read json data from client"""

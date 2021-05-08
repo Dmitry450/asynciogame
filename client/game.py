@@ -7,7 +7,8 @@ from .entity_manager import EntityManager
 from .local_player import LocalPlayer
 from .connection import Connection
 from .graphics import Graphics
-from .async_clock import AsyncClock
+
+from util.async_clock import AsyncClock
 
 
 class Game:
@@ -88,7 +89,7 @@ class Game:
                     
                     elif event.key == pygame.K_d:
                         presses['right'] = False
-                
+
                 elif event.type == pygame.QUIT:
                     print('Quit event received')
                     

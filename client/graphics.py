@@ -22,6 +22,12 @@ class Graphics:
         except Exception as e:
             print(f"Error while loading texture {name}: {str(e)}")
     
+    def load_dict(self, d):
+        if d["type"] == "surface":
+            surf = pygame.Surface(*d["size"])
+            surf.fill(d["color"])
+            self.images[d["id"]] = surf
+    
     def update_camera(self):
         """Update camera position with tracked object"""
         if self.track_object is not None:

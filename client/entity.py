@@ -33,7 +33,15 @@ class RemoteEntity:
         """Set entity image and load it if neccasuary"""
         if self.definition["images"].get(name) in (self.image, None):
             return
-
-        self.image = self.definition["images"][name]
         
-        self.game.graphics.load_image(self.image)
+        img = self.definition["images"][name]
+        
+        if isinstance(img, dict):
+            self.image = self.definition["images"][name]["id"]
+        
+            self.game.graphics.load_dict(img)
+
+        else:
+            self.image = img
+            
+            self.game.graphics.load_image(self.image)

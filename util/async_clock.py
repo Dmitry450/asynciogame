@@ -34,4 +34,10 @@ class AsyncClock:
         
         self.frames += 1
         
+        if self.time_passed > 1:
+            self.time_passed = 0
+            self.frames = 0
+        
         await asyncio.sleep(time_to_sleep)
+        
+        return dtime

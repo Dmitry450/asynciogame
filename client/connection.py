@@ -83,6 +83,9 @@ class Connection:
             elif data["type"] == "sound.play":
                 sound = data["sound"]
                 
+                if self.game.playername in sound.get("exclude_players", []):
+                    continue
+                
                 if sound["type"] in ("attached_to_position", "attached_to_entity"):
                     if sound["type"] == "attached_to_entity":
                         sound["position"] = self.game.entity_manager.entities[sound["entity"]].position

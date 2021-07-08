@@ -1,7 +1,6 @@
 from pygame.math import Vector2
 
 from .entity import Entity
-from .bullet import Bullet
 
 
 class Player(Entity):
@@ -42,11 +41,12 @@ class Player(Entity):
         self.mouse = mouse
 
     def on_mouse_press(self, position):
-        self.manager.add_entity(Bullet(
+        """self.manager.add_entity(Bullet(
             position=self.rect.center,
             src_entity=self,
             angle=Vector2(0, 0).angle_to(Vector2(position) - Vector2(self.rect.center)))
-        )
+        )"""  # I'll rewrite this later for new addon system
+        pass 
 
     def on_mouse_release(self, position):
         pass

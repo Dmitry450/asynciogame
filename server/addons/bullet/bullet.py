@@ -1,4 +1,4 @@
-from .projectile import Projectile
+from server.projectile import Projectile
 
 
 class Bullet(Projectile):

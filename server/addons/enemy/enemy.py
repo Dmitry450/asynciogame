@@ -2,7 +2,7 @@ from pygame.math import Vector2
 
 import random
 
-from .entity import Entity
+from server.entity import Entity
 
 
 def randvector(speed):

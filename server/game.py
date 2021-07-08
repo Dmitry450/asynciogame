@@ -1,10 +1,9 @@
 import asyncio
 
 from .player import Player
-from .enemy import Enemy
-from .bullet import Bullet
 from .client import Client
 from .entity_manager import EntityManager
+from .addons import load_addons
 
 
 class Game:
@@ -18,12 +17,11 @@ class Game:
         self.clients = {}
         
         Player.register()
-        Enemy.register()
-        Bullet.register()
         
         self.entity_manager = EntityManager(self)
-        self.entity_manager.add_entity(Enemy())
         self.running = True
+        
+        load_addons(self)  # TODO - make config to enable/disable addons
 
     def on_client_connected(self, reader, writer):
         """Callback for asyncio.start_server"""

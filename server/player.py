@@ -8,7 +8,10 @@ class Player(Entity):
     """A player entity"""
     definition = {
         "id": "builtin:player",
-        "images": {"default": "resources/player.png"},
+        "image": {
+            "type": "image",
+            "image": "resources/player.png",
+        },
     }
     
     SIZE = (32, 32)
@@ -17,8 +20,6 @@ class Player(Entity):
                  position=(0, 0),
                  velocity=(0, 0)):
         super().__init__(position, velocity)
-        
-        self.image = "default"
         
         self.mouse = {
             "pressed": False,

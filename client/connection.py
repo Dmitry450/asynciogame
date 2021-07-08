@@ -39,9 +39,8 @@ class Connection:
         
         for entity in (await self.read())["entries"]:
             if entity["entityid"] == self.game.playername:
-                self.game.local_player = self.game.entity_manager.player = LocalPlayer(self.game, EntityManager.registered["builtin:player"])
-                
-                self.game.local_player.set_image(entity["image"])
+                self.game.local_player = LocalPlayer(self.game, EntityManager.registered["builtin:player"])
+                self.game.entity_manager.entities[self.game.playername] = self.game.local_player
                 continue  # Skip ourself
             self.game.entity_manager.add_entity(**entity)
         
@@ -66,7 +65,7 @@ class Connection:
 
             elif data["type"] == "entity.sync":
                 if data["entityid"] == self.game.playername:
-                    self.game.local_player.set_image(data["image"])
+                    self.game.local_player.sync(animation=data.get("animation"))
                     continue  # Skip ourself
                 self.game.entity_manager.entity_updates.put_nowait(data)
             
@@ -76,7 +75,7 @@ class Connection:
                     entityid=data["entityid"],
                     position=data["position"],
                     velocity=data["velocity"],
-                    image=data["image"])
+                    animation=data.get("animation"))
             
             elif data["type"] == "entity.delete":
                 self.game.entity_manager.del_entity(data["entityid"])

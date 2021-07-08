@@ -16,7 +16,19 @@ class Enemy(Entity):
     
     definition = {
         "id": "custom:enemy",
-        "images": {"default": "resources/enemy.png"},
+        "image": {
+            "type": "animated_image",
+            "image": "resources/enemy.png",
+            "tiles_x": 2,
+            "tiles_y": 1,
+            "animations": {
+                "main": {
+                    "time_per_frame": 0.5,
+                    "frames": [(0, 0), (1, 0)],
+                }
+            },
+            "initial_animation": "main",
+        },
     }
     
     def __init__(self, position=(0, 0)):
@@ -24,7 +36,7 @@ class Enemy(Entity):
         
         self.change_velocity_time = random.randint(1, 4)
         self.timer = 0
-        self.image = "default"
+        self.animation = "main"
     
     def on_added(self, manager, id):
         super().on_added(manager, id)

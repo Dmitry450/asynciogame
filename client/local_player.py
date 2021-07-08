@@ -36,6 +36,9 @@ class LocalPlayer(RemoteEntity):
             self.velocity.x = 0
         
         self.mouse = presses['mouse']
+    
+    def sync(self, position=(0, 0), velocity=(0, 0), animation=None):
+        super().sync(self.position, self.velocity, animation)
 
     async def sync_player(self):
         """Sync player velocity and position with server"""

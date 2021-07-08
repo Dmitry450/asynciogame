@@ -8,7 +8,7 @@ class Entity:
     """A server-side entity"""
     definition = {
         "id": "builtin:entity_base",
-        "images": {},
+        "image": {},
     }
     
     SIZE = (10, 10)
@@ -20,6 +20,7 @@ class Entity:
         self.manager = None
         self.tags = set()
         self.id = None
+        self.animation = None
     
     def on_added(self, manager, id):
         """Called when entity added to EntityManager"""
@@ -37,7 +38,7 @@ class Entity:
     def set_velocity(self, velocity=(0, 0)):
         """Set entity velocity"""
         self.velocity = Vector2(velocity)
-
+    
     def get_position(self):
         """Get entity position"""
         return self.rect.topleft

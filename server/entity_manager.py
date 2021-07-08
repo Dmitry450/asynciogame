@@ -41,7 +41,7 @@ class EntityManager:
                 "typeid": self.entities[key].definition["id"],
                 "position": self.entities[key].get_position(),
                 "velocity": self.entities[key].get_velocity(),
-                "image": self.entities[key].image,
+                "animation": self.entities[key].animation,
             })
         
         return entities
@@ -100,5 +100,5 @@ class EntityManager:
                     "entityid": key,
                     "position": self.entities[key].get_position(),
                     "velocity": self.entities[key].get_velocity(),
-                    "image": self.entities[key].image,
+                    "animation": self.entities[key].animation,
                 })

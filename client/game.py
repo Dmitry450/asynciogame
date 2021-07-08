@@ -67,10 +67,11 @@ class Game:
             }
         }
         timer = AsyncClock()  # Not using pygame.time.Clock because it blocks the whole thread
-        last_upd_time = time.time()
+        
+        dtime = 0
         
         while self.running:
-            await timer.tick(60)
+            dtime = await timer.tick(60)
             
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
@@ -126,17 +127,13 @@ class Game:
                 
             self.local_player.update_presses(**presses)
             
-            self.graphics.update_camera()
+            self.graphics.update(dtime)
             
-            dtime = time.time() - last_upd_time
-            last_upd_time += dtime
             self.entity_manager.update(dtime)
             
             self.screen.blit(self.bg, (0, 0))
             
-            self.local_player.draw()
-            
-            self.entity_manager.draw()
+            self.graphics.draw()
             
             pygame.display.flip()
             

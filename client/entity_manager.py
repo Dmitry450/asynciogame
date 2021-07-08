@@ -13,12 +13,13 @@ class EntityManager:
         self.entities = {}
         self.game = game
         self.entity_updates = None
-        self.player = None
     
-    def add_entity(self, typeid, entityid, position, velocity, image):
+    def add_entity(self, typeid, entityid, position, velocity, animation=None):
         """Create new remote entity object"""
         entity = RemoteEntity(self.game, self.registered[typeid], position, velocity)
-        entity.set_image(image)
+        
+        if animation is not None:
+            entity.sprite.set_animation(animation)
         
         self.entities[entityid] = entity
     
@@ -32,24 +33,15 @@ class EntityManager:
             return
         
         del self.entities[key]
-    
-    def draw(self):
-        """Draw all entities"""
-        for entity in self.entities.values():
-            entity.draw()
         
     def update(self, dtime):
         """Update all entities"""
-        if self.player is not None:
-            self.player.update(dtime)
-        
         for entity in self.entities.values():
             entity.update(dtime)
-            
     
     async def run_entities_sync(self):
         """Synchronize entities with server"""
         while self.game.running:
             update = await self.entity_updates.get()
             
-            self.entities[update["entityid"]].sync(update["position"], update["velocity"], update["image"])
+            self.entities[update["entityid"]].sync(update["position"], update["velocity"], update.get("animation"))

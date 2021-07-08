@@ -79,6 +79,17 @@ class Connection:
             
             elif data["type"] == "entity.delete":
                 self.game.entity_manager.del_entity(data["entityid"])
+            
+            elif data["type"] == "sound.play":
+                sound = data["sound"]
+                
+                if sound["type"] in ("attached_to_position", "attached_to_entity"):
+                    if sound["type"] == "attached_to_entity":
+                        sound["position"] = self.game.entity_manager.entities[sound["entity"]].position
+                    
+                    sound["type"] = "attached"
+
+                self.game.audio.play_sound(sound)
 
             elif data["type"] == "error":
                 print(f"Error from server: {data['text']}")

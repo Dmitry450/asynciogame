@@ -7,6 +7,7 @@ from .entity_manager import EntityManager
 from .local_player import LocalPlayer
 from .connection import Connection
 from .graphics import Graphics
+from .audio import AudioManager
 
 from util.async_clock import AsyncClock
 
@@ -27,6 +28,8 @@ class Game:
         self.bg.fill('#4444FF')
         
         self.graphics = Graphics(self.screen)
+        
+        self.audio = AudioManager()
         
         self.graphics.draw_offset = pygame.math.Vector2(self.SIZE) / 2
         

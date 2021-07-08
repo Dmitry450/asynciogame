@@ -4,9 +4,10 @@ from pygame.math import Vector2
 
 class Sound:
     
-    def __init__(self, manager, snd):
+    def __init__(self, manager, snd, volume=1.0):
         self.manager = manager
-        self.snd = snd
+        self.snd = pygame.mixer.Sound(snd)
+        self.snd.set_volume(1.0)
         
         self.ttl = snd.get_length()
         
@@ -23,7 +24,7 @@ class Sound:
 
 class AttachedSound(Sound):
     
-    def __init__(self, manager, snd, position, fade_dist=1, min_volume=0.1):
+    def __init__(self, manager, snd, position, volume=1.0, fade_dist=1, min_volume=0.1):
         super().__init__(manager, snd)
         
         if not isinstance(position, Vector2):
@@ -31,6 +32,7 @@ class AttachedSound(Sound):
         
         self.position = position
         
+        self.volume = volume
         self.fade_dist = fade_dist
         self.min_volume = min_volume
 
@@ -40,7 +42,7 @@ class AttachedSound(Sound):
         if self.playing and self.manager.track_object is not None:
             dist = self.position.distance_to(self.manager.track_object.position)
             
-            volume = elf.fade_dist/dist
+            volume = self.volume*self.fade_dist/dist
             
             if volume > self.min_volume:
                 self.snd.set_volume(volume)
@@ -64,7 +66,7 @@ class AudioManager:
             self.loaded[name] = pygame.mixer.Sound(name)
         
         if d["type"] == "normal":
-            self.sounds.append(Sound(self, self.loaded[name]))
+            self.sounds.append(Sound(self, self.loaded[name], volume=d.get("volume", 1.0)))
         
         # Actually sound can be "attached_to_position" and "attached_to_entity".
         # To avoid adding EntityManager reference into AudioManager, "position"
@@ -72,6 +74,7 @@ class AudioManager:
         # Anyway, d["type"] will be set to "attached"
         elif d["type"] == "attached":
             self.sounds.append(AttachedSound(self, self.loaded[name], d["position"],
+                                             volume=d.get("volume", 1.0),
                                              fade_dist=d.get("fade_dist", 1),
                                              min_volume=d.get("min_volume", 0.1)))
     

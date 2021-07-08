@@ -25,7 +25,7 @@ def load_addons(game, names=None):
             logging.error(f'load_addons: addon {name} has no on_load function')
 
         except Exception as e:
-            logging.error(f'load_addons: exception when loading addon {name} - {e.__class__.__name__}: {str(e)}')
+            logging.exception(f'load_addons: exception when loading addon {name}')
 
         else:
             logging.info(f'load_addons: loaded addon {name}')

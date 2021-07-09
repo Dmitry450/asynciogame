@@ -1,3 +1,5 @@
+import logging
+
 import pygame
 
 from .image import SurfaceImage, AnimatedImage, TileMap
@@ -20,6 +22,12 @@ class Graphics:
         self.camera = pygame.math.Vector2()
         
         self.screen = screen
+        
+        self.background = pygame.Surface(screen.get_size())
+        self.background.fill('#4444FF')
+        
+        self.ground = None
+        self.ground_position = None
     
     def load_image(self, name):
         """Load image if it is not exists yet"""
@@ -31,6 +39,27 @@ class Graphics:
             print(f"Error while loading texture {name}: {str(e)}")
         
         return self.surfaces[name]
+    
+    def set_bg_color(self, color):
+        self.background.fill(color)
+    
+    def set_bg_image(self, name):
+        self.background = self.load_image(name)
+    
+    def set_ground(self, surfdef=None, name=None, position=(0, 0)):
+        """Set ground sprite from definition dict"""
+        if surfdef is None and name is None:
+            logging.warn("Graphics.set_ground: expected surfdef or name argument (both are None)")
+            return
+        
+        if surfdef is not None:
+            self.ground = pygame.Surface(surfdef["size"])
+            self.ground.fill(surfdef["color"])
+        
+        else:
+            self.ground = self.load_image(name)
+        
+        self.ground_position = position
     
     def create_sprite(self, d):
         """Create sprite from definition dict"""
@@ -69,8 +98,38 @@ class Graphics:
         
         self.group.update(dtime)
     
+    def draw_background(self):
+        """Draw background to screen"""
+        self.screen.blit(self.background, (0, 0))
+        
+        if self.ground is not None:
+            draw_x = draw_y = 0
+            
+            surf_x, surf_y = self.camera - self.ground_position
+            
+            if surf_x < 0:
+                draw_x = -surf_x
+                surf_x = 0
+            
+            if surf_y < 0:
+                draw_y = -surf_y
+                surf_y = 0
+            
+            draw_width, draw_height = self.screen.get_size()
+            
+            if surf_x + draw_width > self.ground.get_width():
+                draw_width = self.ground.get_width() - surf_x
+            
+            if surf_y + draw_height > self.ground.get_height():
+                draw_height = self.ground.get_height() - surf_y
+            
+            self.screen.blit(self.ground.subsurface((surf_x, surf_y, draw_width, draw_height)), (draw_x, draw_y))
+                
+    
     def draw(self):
         """Draw sprites"""
+        self.draw_background()
+        
         sprites = self.group.sprites()
         sprites.sort()
         

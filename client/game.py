@@ -24,8 +24,6 @@ class Game:
         pygame.init()
         
         self.screen = pygame.display.set_mode(self.SIZE)
-        self.bg = pygame.Surface(self.SIZE)
-        self.bg.fill('#4444FF')
         
         self.graphics = Graphics(self.screen)
         
@@ -133,8 +131,6 @@ class Game:
             self.graphics.update(dtime)
             
             self.entity_manager.update(dtime)
-            
-            self.screen.blit(self.bg, (0, 0))
             
             self.graphics.draw()
             

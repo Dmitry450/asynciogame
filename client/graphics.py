@@ -46,10 +46,10 @@ class Graphics:
     def set_bg_image(self, name):
         self.background = self.load_image(name)
     
-    def set_ground(self, surfdef=None, name=None, position=(0, 0)):
+    def set_ground(self, surfdef=None, image_name=None, position=(0, 0)):
         """Set ground sprite from definition dict"""
-        if surfdef is None and name is None:
-            logging.warn("Graphics.set_ground: expected surfdef or name argument (both are None)")
+        if surfdef is None and image_name is None:
+            logging.warn("Graphics.set_ground: expected surfdef or image_name argument (both are None)")
             return
         
         if surfdef is not None:
@@ -57,7 +57,7 @@ class Graphics:
             self.ground.fill(surfdef["color"])
         
         else:
-            self.ground = self.load_image(name)
+            self.ground = self.load_image(image_name)
         
         self.ground_position = position
     

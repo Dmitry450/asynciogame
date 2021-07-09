@@ -100,7 +100,7 @@ class Connection:
             elif data["type"] == "background.set_image":
                 self.game.graphics.set_bg_image(data["name"])
             
-            elif data["type"] == "ground.set_image":
+            elif data["type"] == "ground.set":
                 self.game.graphics.set_ground(
                     surfdef=data.get("surfdef"),
                     image_name=data.get("image_name"),

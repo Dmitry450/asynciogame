@@ -93,6 +93,19 @@ class Connection:
                     sound["type"] = "attached"
 
                 self.game.audio.play_sound(sound)
+            
+            elif data["type"] == "background.set_color":
+                self.game.graphics.set_bg_color(data["color"])
+            
+            elif data["type"] == "background.set_image":
+                self.game.graphics.set_bg_image(data["name"])
+            
+            elif data["type"] == "ground.set_image":
+                self.game.graphics.set_ground(
+                    surfdef=data.get("surfdef"),
+                    image_name=data.get("image_name"),
+                    position=data.get("position", (0, 0)),
+                )
 
             elif data["type"] == "error":
                 print(f"Error from server: {data['text']}")

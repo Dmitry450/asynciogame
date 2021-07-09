@@ -59,12 +59,10 @@ class SurfaceImage(pg.sprite.Sprite):
         self.camera = camera
     
     def set_pos(self, position):
-        self._layer = position[1]
-        
         self.rect.center = position - self.camera
     
     def __gt__(self, other):
-        return self.rect.y > other.rect.y
+        return self.rect.bottom > other.rect.bottom
     
     def __lt__(self, other):
         return other > self

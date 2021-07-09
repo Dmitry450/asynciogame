@@ -59,8 +59,8 @@ class Game:
             fade_dist specifies distance from player to sound source to start fading away.
             If calculated (client side) sound volume lower than min_volume, its volume changed to 0
             """
-            if entityid is None and position is None:
-                logging.warning("Game.Api.play_sound_at: expected entity or position argument (both are None)")
+            if entity is None and position is None:
+                logging.warn("Game.Api.play_sound_at: expected entity or position argument (both are None)")
                 return
             
             sound = {
@@ -81,6 +81,44 @@ class Game:
                 sound["type"] = "attached_to_entity"
                 sound["entity"] = entity.id
         
+        def set_background(self, image_name=None, color=None):
+            """Set background color or image"""
+            if image_name is None and color is None:
+                logging.warn("Game.Api.set_background: expected image_name or color argument (both are None)")
+                return
+            
+            if image_name is not None:
+                event = {
+                    "type": "background.set_image",
+                    "name": image_name,
+                }
+            
+            else:
+                event = {
+                    "type": "background.set_color",
+                    "color": color,
+                }
+            
+            self.game.push_event(event)
+        
+        def set_ground(self, surfdef=None, image_name=None, position=None):
+            """Set/add ground from surfdef (dict with "size" and "color" keys) or from image_name"""
+            if surfdef is None and image_name is None:
+                logging.warn("Game.Api.set_ground: expected surfdef or image_name argument (both are None)")
+            
+            event = {"type": "ground.set"}
+            
+            if surfdef is not None:
+                event["surfdef"] = surfdef
+            
+            else:
+                event["image_name"] = image_name
+            
+            if position is not None:
+                event["position"] = position
+            
+            self.game.push_event(event)
+        
         def register_handler(self, name):
             if name in self.handlers.keys():
                 logging.warning(f"Game.Api.register_handler: handler {name} already exists")
@@ -91,15 +129,15 @@ class Game:
         def add_handlers(self, **kwargs):
             for name in kwargs.keys():
                 if self.handlers.get(name) is None:
-                    logging.warning(f"Game.Api.add_handlers: no such handler {name}. "
-                                    "If you want to add custom handler, please call register_handler first")
+                    logging.warn(f"Game.Api.add_handlers: no such handler {name}. "
+                                  "If you want to add custom handler, please call register_handler first")
                 
                 else:
                     self.handlers[name].append(kwargs[name])
         
         def call_handlers(self, name, *args, **kwargs):
             if self.handlers.get(name) is None:
-                logging.warning(f"Game.Api.call_handlers: no such handler: {name}")
+                logging.warn(f"Game.Api.call_handlers: no such handler: {name}")
             
             for handler in self.handlers[name]:
                 try:
